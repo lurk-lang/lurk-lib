@@ -1,0 +1,50 @@
+!(:load "quasi.lurk")
+!(:load "compile.lurk")
+
+!(:assert-eq
+  1
+  (compile-closure
+   1
+   '(b)
+   '()
+   '((a . 1))))
+
+!(:assert-eq
+  1
+  (compile-closure
+   'a
+   '(b)
+   '()
+   '((a . 1))))
+
+!(:assert-eq
+  '(+ 1 b)
+  (compile-closure
+   '(+ a b)
+   '(b)
+   '()
+   '((a . 1))))
+
+!(:assert-eq
+  '(+ 1 b)
+  (compile-closure
+   '(+ a b)
+   '(b)
+   '()
+   '((a . 1) (b . 2))))
+
+!(:assert-eq
+  '(lambda (a) (+ a b))
+  (compile-closure
+   '(lambda (a) (+ a b))
+   '(b)
+   '()
+   '((a . 1))))
+
+!(:assert-eq
+  '(let ((a (+ 1 b))) (+ a b))
+  (compile-closure
+   '(let ((a (+ a b))) (+ a b))
+   '(b)
+   '()
+   '((a . 1))))
