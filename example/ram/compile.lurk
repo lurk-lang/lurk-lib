@@ -48,7 +48,7 @@
       (if (atom e)
           (if (member e params)
               e
-              (lookup e ram (lambda (v) e) (lambda () (lookup e env (lambda (v) v) (lambda () e)))))
+              (lookup e ram (lambda (v) e) (lambda () (lookup e env (lambda (v) (if (procedure v) e v)) (lambda () e)))))
           (let ((tag (car e)))
             (if (or (eq 'let tag) (eq 'letrec tag))
                 ;; TODO: this does not shadow the binders in the RHS

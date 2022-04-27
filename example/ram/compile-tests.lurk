@@ -48,3 +48,30 @@
    '(b)
    '()
    '((a . 1))))
+
+!(:assert-eq
+  '(+ 1 b)
+  (compile-closure
+   '(+ a b)
+   '(b)
+   '() ;;(current-ram) TODO: RAM is not an exp
+   '((a . 1))))
+
+!(:assert-eq
+  '(+ 1 b)
+  (let ((a 1))
+    (compile-closure
+     '(+ a b)
+     '(b)
+     '()
+     (current-env))))
+
+!(:assert-eq
+  '(+ (f 1) b)
+  (let ((a 1)
+        (f (lambda (x) x)))
+    (compile-closure
+     '(+ (f a) b)
+     '(b)
+     '()
+     (current-env))))
