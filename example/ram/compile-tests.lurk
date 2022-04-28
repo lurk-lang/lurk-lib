@@ -75,3 +75,24 @@
      '(b)
      '()
      (current-env))))
+
+!(:assert-eq
+  1
+  ((lambda (x) x) 1))
+
+!(:assert-eq
+  1
+  ((compile (lambda (x) x)) 1))
+
+!(:assert-eq
+  12
+  (let ((a 1)
+        (f (lambda (b) (+ a b))))
+    (* (f 2) (f 3))))
+
+!(:assert-eq
+  12
+  (let ((a 1)
+        (f (lambda (b) (+ a b)))
+        (f (compile f)))
+    (* (f 2) (f 3))))
