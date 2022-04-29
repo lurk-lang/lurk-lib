@@ -44,10 +44,10 @@
 !(:assert-eq
   '(let ((a (+ 1 b))) (+ a b))
   (compile-closure
-   '(let ((a (+ a b))) (+ a b))
+   '(let ((a (+ c b))) (+ a b))
    '(b)
    '()
-   '((a . 1))))
+   '((c . 1))))
 
 !(:assert-eq
   '(+ 1 b)
