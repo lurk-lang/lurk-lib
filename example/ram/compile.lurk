@@ -57,6 +57,5 @@
                   ,(rec-params (let-body e) (append (map (lambda (b) (car b)) (let-bindings e)) params)))
                 (if (eq 'lambda tag)
                     `(,tag ,(lambda-params e) ,(rec-params (lambda-body e) (append (lambda-params e) params)))
-                    ;; do we need to treat macros and vanilla application differently?
-                    ;; maybe do not optimize macros?
+                    ;; NOTE: this is post-expansions, so no macros!
                     (map rec e))))))))
