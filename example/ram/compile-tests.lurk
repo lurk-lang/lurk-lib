@@ -77,6 +77,16 @@
      (current-env))))
 
 !(:assert-eq
+  '(+ (f 1) b)
+  (letrec ((a 1)
+           (f (lambda (x) x)))
+    (compile-closure
+     '(+ (f a) b)
+     '(b)
+     '()
+     (current-env))))
+
+!(:assert-eq
   1
   ((lambda (x) x) 1))
 
@@ -96,3 +106,10 @@
         (f (lambda (b) (+ a b)))
         (f (compile f)))
     (* (f 2) (f 3))))
+
+!(:assert-eq
+  12
+  (letrec ((a 1)
+           (f (lambda (b) (+ a b)))
+           (fc (compile f)))
+    (* (fc 2) (fc 3))))

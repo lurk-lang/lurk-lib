@@ -28,9 +28,12 @@
   (lambda (e env success failure)
     (if (eq nil env)
         (failure)
-        (if (eq e (car (car env)))
-            (success (cdr (car env)))
-            (lookup e (cdr env) success failure)))))
+        (if (eq nil (atom (car (car env))))
+            (lookup e (car env) success
+                    (lambda () (lookup e (cdr env) success failure)))
+            (if (eq e (car (car env)))
+                (success (cdr (car env)))
+                (lookup e (cdr env) success failure))))))
 
 (define member
   (lambda (e xs)
