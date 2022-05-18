@@ -1,0 +1,115 @@
+!(:load "quasi.lurk")
+!(:load "compile.lurk")
+
+!(:assert-eq
+  1
+  (compile-closure
+   1
+   '(b)
+   '()
+   '((a . 1))))
+
+!(:assert-eq
+  1
+  (compile-closure
+   'a
+   '(b)
+   '()
+   '((a . 1))))
+
+!(:assert-eq
+  '(+ 1 b)
+  (compile-closure
+   '(+ a b)
+   '(b)
+   '()
+   '((a . 1))))
+
+!(:assert-eq
+  '(+ 1 b)
+  (compile-closure
+   '(+ a b)
+   '(b)
+   '()
+   '((a . 1) (b . 2))))
+
+!(:assert-eq
+  '(lambda (a) (+ a b))
+  (compile-closure
+   '(lambda (a) (+ a b))
+   '(b)
+   '()
+   '((a . 1))))
+
+!(:assert-eq
+  '(let ((a (+ 1 b))) (+ a b))
+  (compile-closure
+   '(let ((a (+ c b))) (+ a b))
+   '(b)
+   '()
+   '((c . 1))))
+
+!(:assert-eq
+  '(+ 1 b)
+  (compile-closure
+   '(+ a b)
+   '(b)
+   '() ;;(current-ram) TODO: RAM is not an exp
+   '((a . 1))))
+
+!(:assert-eq
+  '(+ 1 b)
+  (let ((a 1))
+    (compile-closure
+     '(+ a b)
+     '(b)
+     '()
+     (current-env))))
+
+!(:assert-eq
+  '(+ (f 1) b)
+  (let ((a 1)
+        (f (lambda (x) x)))
+    (compile-closure
+     '(+ (f a) b)
+     '(b)
+     '()
+     (current-env))))
+
+!(:assert-eq
+  '(+ (f 1) b)
+  (letrec ((a 1)
+           (f (lambda (x) x)))
+    (compile-closure
+     '(+ (f a) b)
+     '(b)
+     '()
+     (current-env))))
+
+!(:assert-eq
+  1
+  ((lambda (x) x) 1))
+
+!(:assert-eq
+  1
+  ((compile (lambda (x) x)) 1))
+
+!(:assert-eq
+  12
+  (let ((a 1)
+        (f (lambda (b) (+ a b))))
+    (* (f 2) (f 3))))
+
+!(:assert-eq
+  12
+  (let ((a 1)
+        (f (lambda (b) (+ a b)))
+        (f (compile f)))
+    (* (f 2) (f 3))))
+
+!(:assert-eq
+  12
+  (letrec ((a 1)
+           (f (lambda (b) (+ a b)))
+           (fc (compile f)))
+    (* (fc 2) (fc 3))))
