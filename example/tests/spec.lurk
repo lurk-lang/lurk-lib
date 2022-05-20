@@ -215,7 +215,70 @@
                   (closure 1)))
 
 ;; outer-evaluate-let-no-body
-!(:assert-eq nil (let ((a 9))))
+!(:assert-error (let ((a 9))))
+
+;; outer-prove-quote-end-is-nil-error
+!(:assert-error (quote (1) (2)))
+
+;; outer-prove-if-end-is-nil-error
+!(:assert-error (if nil 5 6 7))
+
+;; outer-prove-binop-rest-is-nil
+!(:assert-error (- 9 8 7))
+
+;; outer-prove-relop-rest-is-nil
+!(:assert-error (= 9 8 7))
+
+;; outer-prove-error-div-by-zero
+!(:assert-error (/ 21 0))
+
+;; outer-prove-error-invalid-type-and-not-cons
+!(:assert-error (/ 21 nil))
+
+;; outer-prove-evaluate-current-env-rest-is-nil-error
+!(:assert-error (current-env a))
+
+;; outer-prove-evaluate-let-end-is-nil-error
+!(:assert-error (let ((a 1 2)) a))
+
+;; outer-prove-evaluate-letrec-end-is-nil-error
+!(:assert-error (letrec ((a 1 2)) a))
+
+;; outer-prove-evaluate-let-empty-error
+!(:assert-error (let))
+
+;; outer-prove-evaluate-let-empty-body-error
+!(:assert-error (let ((a 1))))
+
+;; outer-prove-evaluate-letrec-empty-error
+!(:assert-error (letrec))
+
+;; outer-prove-evaluate-letrec-empty-body-error
+!(:assert-error (letrec ((a 1))))
+
+;; outer-prove-evaluate-let-rest-body-is-nil-error
+!(:assert-error (let ((a 1)) a 1))
+
+;; outer-prove-evaluate-letrec-rest-body-is-nil-error
+!(:assert-error (letrec ((a 1)) a 1))
+
+;; outer-prove-error-car-end-is-nil-error
+!(:assert-error (car (1 2) 3))
+
+;; outer-prove-error-cdr-end-is-nil-error
+!(:assert-error (cdr (1 2) 3))
+
+;; outer-prove-error-atom-end-is-nil-error
+!(:assert-error (atom 123 4))
+
+;; outer-prove-error-emit-end-is-nil-error
+!(:assert-error (emit 123 4))
+
+;; outer-prove-error-zero-arg-lambda4
+!(:assert-error ((lambda () 123) 1))
+
+;; outer-prove-error-zero-arg-lambda5
+!(:assert-error (123))
 
 ;; outer-evaluate-cons 1
 !(:assert-eq 1 (car (cons 1 2)))
@@ -363,3 +426,42 @@
                                 f)))
                   ;; This should be an error. X should not be bound here.
                   (+ (outer 1) x)))
+
+;; env-let
+!(:assert-eq '((a . 1)) (let ((a 1)) (current-env)))
+
+;; env-let-nested
+!(:assert-eq '((b . 2) (a . 1)) (let ((a 1)) (let ((b 2)) (current-env))))
+
+;; env-letrec
+!(:assert-eq '(((a . 1))) (letrec ((a 1)) (current-env)))
+
+;; env-letrec-nested
+!(:assert-eq '(((b . 2)  (a . 1))) (letrec ((a 1)) (letrec ((b 2)) (current-env))))
+
+;; env-let-letrec-let
+!(:assert-eq '((e . 5) ((d . 4) (c . 3)) (b . 2) (a . 1))
+             (let ((a 1) (b 2)) (letrec ((c 3) (d 4)) (let ((e 5)) (current-env)))))
+
+
+;; TODO: Add assertion to check emitted values.
+!(:assert-eq 3 (begin (emit 1) (emit 2) (emit 3)))
+
+;; TODO: Add assertion to check emitted values.
+!(:assert-eq 1 (begin1 (emit 1) (emit 2) (emit 3)))
+
+!(:assert-eq nil (begin))
+!(:assert-eq nil (begin1))
+
+!(:assert-eq '((a . 1)) (let ((a 1))
+                          (begin
+                           (let ((b 2))
+                             (emit b))
+                           (current-env))))
+
+
+!(:assert-eq '((a . 1)) (let ((a 1))
+                          (begin1
+                           (current-env)
+                           (let ((b 2))
+                             (emit b)))))

@@ -16,3 +16,6 @@
 
 (define to0 (lambda (n) (if (eq n 0) 'done (to0 (- n 1)))))
 !(:assert-eq 'done (to0 3))
+
+(define top 0)
+!(:assert-eq 1 (let ((top 1)) top))
