@@ -444,14 +444,9 @@
              (let ((a 1) (b 2)) (letrec ((c 3) (d 4)) (let ((e 5)) (current-env)))))
 
 
-;; TODO: Add assertion to check emitted values.
 !(:assert-eq 3 (begin (emit 1) (emit 2) (emit 3)))
 
-;; TODO: Add assertion to check emitted values.
-!(:assert-eq 1 (begin1 (emit 1) (emit 2) (emit 3)))
-
 !(:assert-eq nil (begin))
-!(:assert-eq nil (begin1))
 
 !(:assert-eq '((a . 1)) (let ((a 1))
                           (begin
@@ -459,9 +454,4 @@
                              (emit b))
                            (current-env))))
 
-
-!(:assert-eq '((a . 1)) (let ((a 1))
-                          (begin1
-                           (current-env)
-                           (let ((b 2))
-                             (emit b)))))
+!(:assert-emitted (begin (emit 1) (emit 2) (emit 3)) '(1 2 3))
