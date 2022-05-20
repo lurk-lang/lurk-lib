@@ -51,7 +51,7 @@
       (if (atom e)
           (if (member e params)
               e
-              (lookup e ram (lambda (v) e) (lambda () (lookup e env (lambda (v) (if (procedure v) e v)) (lambda () e)))))
+              (lookup e env (lambda (v) (if (procedure v) e v)) (lambda () e)))
           (let ((tag (car e)))
             (if (or (eq 'let tag) (eq 'letrec tag))
                 ;; NOTE: this over approximates params in the right-hand sides
